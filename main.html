@@ -3,22 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voting Eligibility Form</title>
+    <title>Promise.all Table</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
 <body>
-    <h2>Enter Your Details</h2>
-    <form id="voteForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br><br>
-        
-        <label for="age">Age:</label>
-        <input type="number" id="age" name="age"><br><br>
-        
-        <button type="submit" id="btn">Submit</button>
-    </form>
-	
+    <table>
+        <thead>
+            <tr>
+                <th>Promise</th>
+                <th>Time Taken (Seconds)</th>
+            </tr>
+        </thead>
+        <tbody id="output">
+            <tr>
+                <td colspan="2">Loading...</td>
+            </tr>
+        </tbody>
+    </table>
 
-				    
+    <script>
+        function createPromise(index) {
+            const time = (Math.random() * 2 + 1).toFixed(3); // Random time between 1 and 3 seconds
+            return new Promise(resolve => {
+                setTimeout(() => resolve({ index, time }), time * 1000);
+            });
+        }
+
+        const promises = [createPromise(1), createPromise(2), createPromise(3)];
+
+        Promise.all(promises).then(results => {
+            const output = document.getElementById('output');
+            output.innerHTML = ''; // Clear loading row
+
+            results.forEach(({ index, time }) => {
+                const row = `<tr><td>Promise ${index}</td><td>${time}</td></tr>`;
+                output.innerHTML += row;
+            });
+
+            const maxTime = Math.max(...results.map(r => parseFloat(r.time))).toFixed(3);
+            output.innerHTML += `<tr><td>Total</td><td>${maxTime}</td></tr>`;
+        });
+    </script>
 </body>
 </html>
-		
